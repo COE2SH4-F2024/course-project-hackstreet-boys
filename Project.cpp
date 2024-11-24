@@ -121,7 +121,7 @@ void DrawScreen(void)
     else if (myGM->getLoseFlagStatus() == true)
     {
         MacUILib_clearScreen();
-        MacUILib_printf("You lose! You total score before losing was %d.\n", myGM->getScore());
+        MacUILib_printf("You lose! Your total score before losing was %d.\n", myGM->getScore());
     }
     
     else
