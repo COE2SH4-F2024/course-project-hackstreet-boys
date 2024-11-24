@@ -7,17 +7,21 @@ Player::Player(GameMechs* thisGMRef)
 {
     mainGameMechsRef = thisGMRef;
     myDir = STOP;
+    //playerPosList = 
 
     // more actions to be included
     playerPos.pos->x = mainGameMechsRef->getBoardSizeX()/2;
     playerPos.pos->y = mainGameMechsRef->getBoardSizeY()/2;
     playerPos.symbol = '@';
+
+    //playerPosList->insertHead(headPos);
 }
 
 
 Player::~Player()
 {
     // delete any heap members here
+    //delete playerPosList;
 }
 
 objPos Player::getPlayerPos() const
@@ -34,9 +38,6 @@ void Player::updatePlayerDir()
         //use switch case
         switch(input)
         {                      
-            case ' ':  // exit
-                mainGameMechsRef->setExitTrue();
-                break;
             case 'W':
             case 'w': 
                 if (myDir != DOWN){
@@ -64,7 +65,6 @@ void Player::updatePlayerDir()
             default:
                 break;
         }
-        mainGameMechsRef->clearInput();
 
 }
 

@@ -11,6 +11,8 @@ GameMechs::GameMechs()
 
     boardSizeX = 20;
     boardSizeY = 10;
+
+    food.setObjPos(5,5,'o');
     
 }
 
@@ -24,12 +26,14 @@ GameMechs::GameMechs(int boardX, int boardY)
 
     boardSizeX = boardX;
     boardSizeY = boardY;
+
+    food.setObjPos(5,5,'o');
 }
 
 // do you need a destructor?
 GameMechs::~GameMechs()
 {
-    
+    //no destruction needed
 }
 
 bool GameMechs::getExitFlagStatus() const
@@ -43,13 +47,9 @@ bool GameMechs::getLoseFlagStatus() const
 }
     
 
-char GameMechs::getInput()
+char GameMechs::getInput() const
 {
     
-    if(MacUILib_hasChar()){
-        input = MacUILib_getChar();
-    }
-    if (input == ' ') exitFlag = true;
     return input;
 
 }
@@ -82,17 +82,24 @@ void GameMechs::setExitTrue()
 
 void GameMechs::setLoseFlag()
 {
-    
+    loseFlag = true;
+    exitFlag = true; //game ends when you lose
 }
 
 void GameMechs::setInput(char this_input)
 {
-
+    input = this_input;
 }
 
 void GameMechs::clearInput()
 {
-
+    input = 0;
 }
 
 // More methods should be added here
+void GameMechs::collectAsyncInput()
+{
+    if(MacUILib_hasChar()){
+        input = MacUILib_getChar();
+    }
+}
