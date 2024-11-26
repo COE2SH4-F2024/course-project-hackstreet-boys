@@ -3,6 +3,7 @@
 #include "objPos.h"
 #include "GameMechs.h"
 #include "Player.h"
+#include "Food.h"
 
 using namespace std;
 
@@ -10,6 +11,7 @@ using namespace std;
 
 Player *myPlayer;
 GameMechs *myGM;
+Food *myFood;
 
 void Initialize(void);
 void GetInput(void);
@@ -44,6 +46,8 @@ void Initialize(void)
     MacUILib_clearScreen();
     myGM = new GameMechs(); //exit flag is automatically set to false in this constructor
     myPlayer = new Player(myGM);
+    myFood = new Food();
+    myFood->generateFood(myPlayer->getPlayerPos(), *myGM);
 
     
 }
@@ -68,6 +72,11 @@ void RunLogic(void)
     else if (myGM->getInput() == 'l') //FOR DEBUGGING: test to see if lose state works
     {
         myGM->setLoseFlag();
+    }
+
+    else if (myGM->getInput() == 'f') //FOR DEBUGGING: test food generation
+    {
+        myFood->generateFood(myPlayer->getPlayerPos(), *myGM);
     }
 
     else
@@ -99,9 +108,10 @@ void DrawScreen(void)
                 else if(col == playerPos.pos->x &&  row == playerPos.pos->y) {
                     MacUILib_printf("%c", playerPos.symbol);
                 }
-        //        else if(col == foodPos.pos->x &&  row == foodPos.pos->y) {
-        //            MacUILib_printf("%c", foodPos.symbol);
-        //        }
+                else if(col == myFood->getFoodPos().pos->x &&  row == myFood->getFoodPos().pos->y) {
+                    MacUILib_printf("%c", myFood->getFoodPos().getSymbol());
+                }
+                
                 else {
                     MacUILib_printf("%c", ' ');  // print a space character
                 }
@@ -115,6 +125,7 @@ void DrawScreen(void)
     MacUILib_printf("Player Position: (%d, %d), %c\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
     MacUILib_printf("DEBUGGING: Increment Score with 'p'.\n");
     MacUILib_printf("DEBUGGING: Trigger lose state with 'l'.\n");
+    MacUILib_printf("DEBUGGING: Generate new food with 'f'.\n");
     
     }
 
@@ -143,6 +154,7 @@ void CleanUp(void)
 {
     delete myPlayer;
     delete myGM;
+    delete myFood;
 
     MacUILib_uninit();
 }
