@@ -24,6 +24,15 @@ Player::~Player()
     delete playerPosList;
 }
 
+Player::Player(const Player& other) //copy constructor
+{
+
+}
+Player &Player::operator=(const Player& other) //assignment constructor
+{
+    return *this;
+}
+
 objPos Player::getPlayerPos() const
 {
     // return the reference to the playerPos arrray list
@@ -123,6 +132,11 @@ void Player::movePlayer()
         playerPosList->removeTail();
     }
 
+    if (checkSelfCollision())
+    {
+        mainGameMechsRef->setLoseFlag(); //cause losing
+    }
+
     
 }
 
@@ -134,7 +148,7 @@ bool Player::checkFoodConsumption(Food myFood)
     {
         if(playerPosList->getHeadElement().pos->y == myFood.getFoodPos().pos->y)
         {
-            myFood.generateFood(*playerPosList, *mainGameMechsRef);
+            myFood.generateFood();
             return true;
         }   
     }
@@ -145,4 +159,21 @@ void Player::incrementPlayerLength()
 {
     mainGameMechsRef->incrementScore();
     playerPosList->insertTail(playerPosList->getTailElement());
+}
+
+bool Player::checkSelfCollision()
+{
+    int i = 0; 
+    for (i = 1 ; i < playerPosList->getSize(); i++) //set to 1 so the head does not collide with itself
+    {
+        if (playerPosList->getHeadElement().pos->x == playerPosList->getElement(i).pos->x)
+        {
+            if (playerPosList->getHeadElement().pos->y == playerPosList->getElement(i).pos->y)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

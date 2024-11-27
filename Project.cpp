@@ -45,10 +45,10 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
     myGM = new GameMechs(); //exit flag is automatically set to false in this constructor
-    myFood = new Food();
     myPlayer = new Player(myGM);
     playerPos = myPlayer->getPlayerPosList();
-    myFood->generateFood(*playerPos, *myGM);
+    myFood = new Food(playerPos, myGM);
+    myFood->generateFood();
     
 
     
@@ -63,7 +63,7 @@ void RunLogic(void)
 {
     if(myPlayer->checkFoodConsumption(*myFood))
     {
-        myFood->generateFood(*playerPos, *myGM);
+        myFood->generateFood();
         myPlayer->incrementPlayerLength();
     }
     
@@ -87,7 +87,7 @@ void RunLogic(void)
 
     else if (myGM->getInput() == 'f') //FOR DEBUGGING: test food generation
     {
-        myFood->generateFood(*playerPos, *myGM);
+        myFood->generateFood();
     }
 
     else

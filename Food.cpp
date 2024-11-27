@@ -5,6 +5,13 @@ Food::Food() //does NOT generate coordinates until generateFood is called
     foodPos.symbol = 'o'; 
 }
 
+Food::Food(objPosArrayList* playerPos, GameMechs* GM) 
+{
+    foodPos.symbol = 'o';
+    blockOff = playerPos;
+    myGM = GM;
+}
+
 Food::~Food()
 {
     //nothing on heap
@@ -25,20 +32,20 @@ Food &Food::operator=(const Food &other)
     return *this;
 }
 
-void Food::generateFood(objPosArrayList blockOff, GameMechs myGM)
+void Food::generateFood()
 {
     srand(time(NULL));
     
-    int i = 0, j = 0;
+    int i = 0;
     int X,Y, xRange, yRange;
-    xRange = myGM.getBoardSizeX();
-    yRange = myGM.getBoardSizeY();
+    xRange = myGM->getBoardSizeX();
+    yRange = myGM->getBoardSizeY();
     bool valid = true;
-    int size = blockOff.getSize();
+    int size = blockOff->getSize();
 
     //generate random coordinates
     //iterate through each player semgment
-        //check to see if generated coordinates intersect
+    //check to see if generated coordinates intersect
     
 
     do
@@ -51,7 +58,7 @@ void Food::generateFood(objPosArrayList blockOff, GameMechs myGM)
 
         for (i = 0; i < size; i++)
         {
-            if (X == blockOff.getElement(i).pos->x && Y == blockOff.getElement(i).pos->y)
+            if (X == blockOff->getElement(i).pos->x && Y == blockOff->getElement(i).pos->y)
             {
                 valid = false;
                 break;

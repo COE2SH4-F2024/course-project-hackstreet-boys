@@ -20,6 +20,8 @@ class Player
 
         Player(GameMechs* thisGMRef);
         ~Player();
+        Player(const Player& other); //copy constructor
+        Player& operator=(const Player& other); //assignment constructor
 
         objPos getPlayerPos() const; // Upgrade this in iteration 3.
         objPosArrayList *getPlayerPosList() const;       
@@ -30,6 +32,7 @@ class Player
         
         bool checkFoodConsumption(Food myFood);
         void incrementPlayerLength();
+        bool checkSelfCollision();
 
     private:
         objPos playerPos; // Upgrade this in iteration 3.
