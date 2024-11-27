@@ -25,24 +25,45 @@ Food &Food::operator=(const Food &other)
     return *this;
 }
 
-void Food::generateFood(objPos blockOff, GameMechs myGM)
+void Food::generateFood(objPosArrayList blockOff, GameMechs myGM)
 {
     srand(time(NULL));
+    
+    int i = 0, j = 0;
+    int X,Y, xRange, yRange;
+    xRange = myGM.getBoardSizeX();
+    yRange = myGM.getBoardSizeY();
+    bool valid = true;
+    int size = blockOff.getSize();
+
+    //generate random coordinates
+    //iterate through each player semgment
+        //check to see if generated coordinates intersect
+    
 
     do
     {
-        int X,Y, xRange, yRange;
-        xRange = myGM.getBoardSizeX();
-        yRange = myGM.getBoardSizeY();
-
+        valid = true; //assume coordinates are valid until proven otherwise
+        
         X = (rand() % (xRange-2)) + 1; //make the range each blank space then add 1 to align coordinates
         Y = (rand() % (yRange-2)) + 1; //make the range each blank space then add 1 to align coordinates
 
-        foodPos.pos->x = X;
-        foodPos.pos->y = Y;
-    } while (foodPos.isPosEqual(&blockOff));
-    
+
+        for (i = 0; i < size; i++)
+        {
+            if (X == blockOff.getElement(i).pos->x && Y == blockOff.getElement(i).pos->y)
+            {
+                valid = false;
+                break;
+            }
+        }
+
+    } while (!valid);
+        
+    foodPos.pos->x = X;
+    foodPos.pos->y = Y;
 }
+
 
 objPos Food::getFoodPos() const
 {

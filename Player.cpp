@@ -1,6 +1,5 @@
 #include "Player.h"
-#include "objPos.h"
-#include "GameMechs.h"
+
 
 
 Player::Player(GameMechs* thisGMRef)
@@ -9,6 +8,7 @@ Player::Player(GameMechs* thisGMRef)
     myDir = STOP;
     playerPosList = new objPosArrayList();
     // more actions to be included
+    //myFood = thisFood;
     
     playerPos.pos->x = mainGameMechsRef->getBoardSizeX()/2;
     playerPos.pos->y = mainGameMechsRef->getBoardSizeY()/2;
@@ -127,3 +127,22 @@ void Player::movePlayer()
 }
 
 // More methods to be added
+
+bool Player::checkFoodConsumption(Food myFood)
+{
+    if(playerPosList->getHeadElement().pos->x == myFood.getFoodPos().pos->x)
+    {
+        if(playerPosList->getHeadElement().pos->y == myFood.getFoodPos().pos->y)
+        {
+            myFood.generateFood(*playerPosList, *mainGameMechsRef);
+            return true;
+        }   
+    }
+    return false;
+}
+
+void Player::incrementPlayerLength()
+{
+    mainGameMechsRef->incrementScore();
+    playerPosList->insertTail(playerPosList->getTailElement());
+}

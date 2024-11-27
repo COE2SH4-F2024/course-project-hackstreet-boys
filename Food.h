@@ -17,7 +17,7 @@ class Food
         Food(const Food& other); //copy constructor
         Food& operator=(const Food& other); //assignment constructor
 
-        void generateFood(objPos blockOff, GameMechs myGM);
+        void generateFood(objPosArrayList blockOff, GameMechs myGM);
         objPos getFoodPos() const;
 
 

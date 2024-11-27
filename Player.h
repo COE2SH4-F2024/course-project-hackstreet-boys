@@ -4,6 +4,7 @@
 #include "GameMechs.h"
 #include "objPos.h"
 #include "objPosArrayList.h"
+#include "Food.h"
 
 class Player
 {
@@ -26,6 +27,9 @@ class Player
         void movePlayer();
 
         // More methods to be added here
+        
+        bool checkFoodConsumption(Food myFood);
+        void incrementPlayerLength();
 
     private:
         objPos playerPos; // Upgrade this in iteration 3.
@@ -34,6 +38,8 @@ class Player
 
         // Need a reference to the Main Game Mechanisms
         GameMechs* mainGameMechsRef;
+        //Food* myFood;
+
 };
 
 #endif

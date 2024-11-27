@@ -2,8 +2,7 @@
 #include "MacUILib.h"
 #include "objPos.h"
 #include "GameMechs.h"
-#include "Player.h"
-#include "Food.h"
+#include "Player.h" //implicitly calls #include "Food.h"
 
 using namespace std;
 
@@ -12,7 +11,7 @@ using namespace std;
 Player *myPlayer;
 GameMechs *myGM;
 Food *myFood;
-//objPosArrayList* playerPos;
+objPosArrayList* playerPos;
 
 void Initialize(void);
 void GetInput(void);
@@ -46,10 +45,11 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
     myGM = new GameMechs(); //exit flag is automatically set to false in this constructor
-    myPlayer = new Player(myGM);
     myFood = new Food();
-    myFood->generateFood(myPlayer->getPlayerPos(), *myGM);
-    //playerPos = myPlayer->getPlayerPosList();
+    myPlayer = new Player(myGM);
+    playerPos = myPlayer->getPlayerPosList();
+    myFood->generateFood(*playerPos, *myGM);
+    
 
     
 }
@@ -61,6 +61,12 @@ void GetInput(void)
 
 void RunLogic(void)
 {
+    if(myPlayer->checkFoodConsumption(*myFood))
+    {
+        myFood->generateFood(*playerPos, *myGM);
+        myPlayer->incrementPlayerLength();
+    }
+    
     if (myGM->getInput() == ' ') //key to exit program
     {
         myGM->setExitTrue();
@@ -68,7 +74,9 @@ void RunLogic(void)
 
     else if (myGM->getInput() == 'p') //FOR DEBUGGING: test to see if score can be properly incremented 
     {
-        myGM->incrementScore();
+        
+        myPlayer->incrementPlayerLength();
+        //myGM->incrementScore();
         //playerPos->insertTail(playerPos->getTailElement());
     }
 
@@ -79,7 +87,7 @@ void RunLogic(void)
 
     else if (myGM->getInput() == 'f') //FOR DEBUGGING: test food generation
     {
-        myFood->generateFood(myPlayer->getPlayerPos(), *myGM);
+        myFood->generateFood(*playerPos, *myGM);
     }
 
     else
@@ -95,7 +103,7 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();    
     //objPos playerPos = myPlayer->getPlayerPos();
-    objPosArrayList* playerPos = myPlayer->getPlayerPosList();
+    //objPosArrayList* playerPos = myPlayer->getPlayerPosList();
     objPos* playerLoc = new objPos[playerPos->getSize()];
     for(int i = 0 ; i < playerPos->getSize() ; i++)
     {
