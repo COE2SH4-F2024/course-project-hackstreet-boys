@@ -12,6 +12,7 @@ using namespace std;
 Player *myPlayer;
 GameMechs *myGM;
 Food *myFood;
+//objPosArrayList* playerPos;
 
 void Initialize(void);
 void GetInput(void);
@@ -48,6 +49,7 @@ void Initialize(void)
     myPlayer = new Player(myGM);
     myFood = new Food();
     myFood->generateFood(myPlayer->getPlayerPos(), *myGM);
+    //playerPos = myPlayer->getPlayerPosList();
 
     
 }
@@ -67,6 +69,7 @@ void RunLogic(void)
     else if (myGM->getInput() == 'p') //FOR DEBUGGING: test to see if score can be properly incremented 
     {
         myGM->incrementScore();
+        //playerPos->insertTail(playerPos->getTailElement());
     }
 
     else if (myGM->getInput() == 'l') //FOR DEBUGGING: test to see if lose state works
@@ -91,7 +94,15 @@ void RunLogic(void)
 void DrawScreen(void)
 {
     MacUILib_clearScreen();    
-    objPos playerPos = myPlayer->getPlayerPos();
+    //objPos playerPos = myPlayer->getPlayerPos();
+    objPosArrayList* playerPos = myPlayer->getPlayerPosList();
+    objPos* playerLoc = new objPos[playerPos->getSize()];
+    for(int i = 0 ; i < playerPos->getSize() ; i++)
+    {
+        playerLoc[i] = playerPos->getElement(i);
+
+    }
+    bool found = false;
     //objPos foodPos = myGM->getFoodPos();
     
     int boardX = myGM->getBoardSizeX();
@@ -102,11 +113,19 @@ void DrawScreen(void)
         {
             for (int col = 0; col < boardX; col++)
             {
+                found = false;
+                for(int i = 0 ; i < playerPos->getSize() ; i++)
+                {
+                    if(col == playerLoc[i].pos->x &&  row == playerLoc[i].pos->y){
+                        found = true;
+                    }
+
+                }
                 if (row == 0 || row == boardY-1 || col == 0 || col ==  boardX-1)   {
                     MacUILib_printf("%c", '#');  // print a border character
                 }
-                else if(col == playerPos.pos->x &&  row == playerPos.pos->y) {
-                    MacUILib_printf("%c", playerPos.symbol);
+                else if(found) {
+                    MacUILib_printf("%c", playerLoc[0].symbol);
                 }
                 else if(col == myFood->getFoodPos().pos->x &&  row == myFood->getFoodPos().pos->y) {
                     MacUILib_printf("%c", myFood->getFoodPos().getSymbol());
@@ -122,7 +141,7 @@ void DrawScreen(void)
     //UI messages
     MacUILib_printf("Your current score is: %d.\n", myGM->getScore());
     //Debugging Messages
-    MacUILib_printf("Player Position: (%d, %d), %c\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
+    MacUILib_printf("Player Position: (%d, %d), %c\n", playerLoc[0].pos->x, playerLoc[0].pos->y, playerLoc[0].symbol);
     MacUILib_printf("DEBUGGING: Increment Score with 'p'.\n");
     MacUILib_printf("DEBUGGING: Trigger lose state with 'l'.\n");
     MacUILib_printf("DEBUGGING: Generate new food with 'f'.\n");
