@@ -1,35 +1,29 @@
 #include "Food.h"
 
-Food::Food() //does NOT generate coordinates until generateFood is called
-{
-    foodPos.symbol = 'o'; 
-}
-
 Food::Food(GameMechs* GM) 
 {
-    foodPos.symbol = 'o';
+    foodPosList = new objPosArrayList();
     myGM = GM;
 }
 
 Food::~Food()
 {
-    //nothing on heap
+    delete foodPosList;
 }
 
 Food::Food(const Food& other)
 {
-    foodPos.symbol = other.foodPos.symbol;
-    foodPos.pos->x = other.foodPos.pos->x;
-    foodPos.pos->y = other.foodPos.pos->y;
+    foodPosList = new objPosArrayList(*other.foodPosList);
+    myGM = other.myGM;
 }
 
 Food &Food::operator=(const Food &other)
 {
     if (this != nullptr) 
     {
-    foodPos.symbol = other.foodPos.symbol;
-    foodPos.pos->x = other.foodPos.pos->x;
-    foodPos.pos->y = other.foodPos.pos->y;
+        delete foodPosList;
+        foodPosList = new objPosArrayList(*other.foodPosList);
+        myGM = other.myGM;
     }
     return *this;
 }
@@ -38,17 +32,22 @@ void Food::generateFood(objPosArrayList* blockOff)
 {
     srand(time(NULL));
     
-    int i = 0;
-    int X,Y, xRange, yRange;
+    int i = 0, j = 0;
+    int X,Y, xRange, yRange, specialFood;
     xRange = myGM->getBoardSizeX();
     yRange = myGM->getBoardSizeY();
     bool valid = true;
     int size = blockOff->getSize();
 
+    specialFood = (rand() % 2) + 1;
     //generate random coordinates
     //iterate through each player semgment
     //check to see if generated coordinates intersect
+    while(foodPosList->getSize()>0){
+        foodPosList->removeTail();
+    }
     
+    for (int k = 0 ;k < 5; k++) {
 
     do
     {
@@ -67,15 +66,35 @@ void Food::generateFood(objPosArrayList* blockOff)
             }
             delete tempPos;
         }
+        for (j = 0; j < foodPosList->getSize(); j++)
+        {
+            objPos *tempPos = new objPos(X, Y, 0);
+            if(foodPosList->getElement(j).isPosEqual(tempPos)){
+                valid = false;
+                break;
+            }
+            delete tempPos;
+        }
 
     } while (!valid);
         
-    foodPos.pos->x = X;
-    foodPos.pos->y = Y;
+    if (k < specialFood)
+    {
+        objPos *tempPos = new objPos(X,Y,'S');
+        foodPosList->insertTail(*tempPos);
+        delete tempPos;
+    }
+    else
+    {
+        objPos *tempPos = new objPos(X,Y,'o');
+        foodPosList->insertTail(*tempPos);
+        delete tempPos;
+    }
+    }
 }
 
 
-objPos Food::getFoodPos() const
+objPosArrayList* Food::getFoodPos() const
 {
-    return foodPos;
+    return foodPosList;
 }

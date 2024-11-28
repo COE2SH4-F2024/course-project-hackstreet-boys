@@ -87,7 +87,7 @@ void RunLogic(void)
     if(myPlayer->checkFoodConsumption())
     {
         myFood->generateFood(playerPos);
-        myPlayer->incrementPlayerLength();
+        //myPlayer->incrementPlayerLength();
     }
 
     myPlayer-> movePlayer();
@@ -98,8 +98,9 @@ void RunLogic(void)
 void DrawScreen(void)
 {
     MacUILib_clearScreen();
-    objPos foodPos = myFood->getFoodPos();
-    bool playerFound = false;
+    objPosArrayList *foodPos = myFood->getFoodPos();
+    bool playerFound = false, foodFound = false;
+    int elementCount = 0;
     
     
     int boardX = myGM->getBoardSizeX();
@@ -111,11 +112,20 @@ void DrawScreen(void)
             for (int col = 0; col < boardX; col++)
             {
                 playerFound = false;
+                foodFound = false;
                 for(int i = 0 ; i < playerPos->getSize() ; i++)
                 {
                     objPos *tempPos = new objPos(col, row, 0);
                     if(playerPos->getElement(i).isPosEqual(tempPos)){
                         playerFound = true;
+                    }
+                    delete tempPos;
+                }
+                for(int i = 0 ; i < foodPos->getSize() ; i++)
+                {
+                    objPos *tempPos = new objPos(col, row, 0);
+                    if(foodPos->getElement(i).isPosEqual(tempPos)){
+                        foodFound = true;
                     }
                     delete tempPos;
                 }
@@ -125,8 +135,9 @@ void DrawScreen(void)
                 else if(playerFound) {
                     MacUILib_printf("%c", playerPos->getHeadElement().getSymbol());
                 }
-                else if(col == foodPos.pos->x &&  row == foodPos.pos->y) {
-                    MacUILib_printf("%c", foodPos.getSymbol());
+                else if(foodFound) {
+                    MacUILib_printf("%c", foodPos->getElement(elementCount).getSymbol());
+                    elementCount++;
                 }
                 
                 else {

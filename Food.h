@@ -9,7 +9,8 @@ using namespace std;
 class Food
 {
     private:
-        objPos foodPos;
+        //objPos foodPos;
+        objPosArrayList* foodPosList;
         GameMechs* myGM;
         
 
@@ -21,7 +22,7 @@ class Food
         Food& operator=(const Food& other); //assignment constructor
 
         void generateFood(objPosArrayList* playerPos);
-        objPos getFoodPos() const;
+        objPosArrayList* getFoodPos() const;
 
 
 
