@@ -18,30 +18,30 @@ class Player
     public:
         enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // This is the direction state
 
-        Player(GameMechs* thisGMRef);
+        Player(GameMechs* thisGMRef, Food* thisFood);
         ~Player();
         Player(const Player& other); //copy constructor
         Player& operator=(const Player& other); //assignment constructor
 
-        objPos getPlayerPos() const; // Upgrade this in iteration 3.
+        //objPos getPlayerPos() const; // Upgrade this in iteration 3.
         objPosArrayList *getPlayerPosList() const;       
         void updatePlayerDir();
         void movePlayer();
 
         // More methods to be added here
         
-        bool checkFoodConsumption(Food myFood);
+        bool checkFoodConsumption();
         void incrementPlayerLength();
         bool checkSelfCollision();
 
     private:
-        objPos playerPos; // Upgrade this in iteration 3.
+        //objPos playerPos; // Upgrade this in iteration 3.
         objPosArrayList* playerPosList;
         enum Dir myDir;
 
         // Need a reference to the Main Game Mechanisms
         GameMechs* mainGameMechsRef;
-        //Food* myFood;
+        Food* myFood;
 
 };
 

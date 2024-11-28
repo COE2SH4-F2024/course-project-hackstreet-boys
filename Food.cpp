@@ -5,10 +5,9 @@ Food::Food() //does NOT generate coordinates until generateFood is called
     foodPos.symbol = 'o'; 
 }
 
-Food::Food(objPosArrayList* playerPos, GameMechs* GM) 
+Food::Food(GameMechs* GM) 
 {
     foodPos.symbol = 'o';
-    blockOff = playerPos;
     myGM = GM;
 }
 
@@ -26,13 +25,16 @@ Food::Food(const Food& other)
 
 Food &Food::operator=(const Food &other)
 {
+    if (this != nullptr) 
+    {
     foodPos.symbol = other.foodPos.symbol;
     foodPos.pos->x = other.foodPos.pos->x;
     foodPos.pos->y = other.foodPos.pos->y;
+    }
     return *this;
 }
 
-void Food::generateFood()
+void Food::generateFood(objPosArrayList* blockOff)
 {
     srand(time(NULL));
     
@@ -58,11 +60,12 @@ void Food::generateFood()
 
         for (i = 0; i < size; i++)
         {
-            if (X == blockOff->getElement(i).pos->x && Y == blockOff->getElement(i).pos->y)
-            {
+            objPos *tempPos = new objPos(X, Y, 0);
+            if(blockOff->getElement(i).isPosEqual(tempPos)){
                 valid = false;
                 break;
             }
+            delete tempPos;
         }
 
     } while (!valid);

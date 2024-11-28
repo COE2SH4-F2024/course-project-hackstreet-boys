@@ -11,17 +11,16 @@ class Food
     private:
         objPos foodPos;
         GameMechs* myGM;
-        objPosArrayList* blockOff;
         
 
     public:
         Food();
-        Food(objPosArrayList* playerPos, GameMechs* GM);
+        Food(GameMechs* GM);
         ~Food();
         Food(const Food& other); //copy constructor
         Food& operator=(const Food& other); //assignment constructor
 
-        void generateFood();
+        void generateFood(objPosArrayList* playerPos);
         objPos getFoodPos() const;
 
 

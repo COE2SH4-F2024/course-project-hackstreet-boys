@@ -40,7 +40,7 @@ objPos& objPos::operator=(const objPos& other)
 
 objPos::~objPos() //destructor
 {
-    delete[] pos;
+    delete pos;
 }
 
 
