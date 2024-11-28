@@ -5,7 +5,7 @@
 
 objPosArrayList::objPosArrayList()
 {
-    arrayCapacity = 200;
+    arrayCapacity = ARRAY_MAX_CAP;
     aList = new objPos[arrayCapacity];
     listSize = 0;
     
@@ -73,6 +73,10 @@ objPos objPosArrayList::getHeadElement() const
 
 objPos objPosArrayList::getTailElement() const
 {
+    if (listSize < 1)
+    {
+        return objPos();
+    }
     return aList[listSize - 1];
 }
 

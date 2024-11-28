@@ -148,13 +148,11 @@ void Player::movePlayer()
 
 bool Player::checkFoodConsumption()
 {
-    if(playerPosList->getHeadElement().pos->x == myFood->getFoodPos().pos->x)
+    objPos tempPos = myFood->getFoodPos();
+    if(playerPosList->getHeadElement().isPosEqual(&tempPos))
     {
-        if(playerPosList->getHeadElement().pos->y == myFood->getFoodPos().pos->y)
-        {
-            myFood->generateFood(playerPosList);
-            return true;
-        }   
+        myFood->generateFood(playerPosList);
+        return true;
     }
     return false;
 }
