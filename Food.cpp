@@ -39,7 +39,8 @@ void Food::generateFood(objPosArrayList* blockOff)
     bool valid = true;
     int size = blockOff->getSize();
 
-    specialFood = (rand() % 2) + 1;
+    specialFood = (rand() % 3);
+
     //generate random coordinates
     //iterate through each player semgment
     //check to see if generated coordinates intersect
@@ -47,49 +48,46 @@ void Food::generateFood(objPosArrayList* blockOff)
         foodPosList->removeTail();
     }
     
-    for (int k = 0 ;k < 5; k++) {
+    for (int k = 0 ; k < 5; k++) {
 
-    do
-    {
-        valid = true; //assume coordinates are valid until proven otherwise
-        
-        X = (rand() % (xRange-2)) + 1; //make the range each blank space then add 1 to align coordinates
-        Y = (rand() % (yRange-2)) + 1; //make the range each blank space then add 1 to align coordinates
-
-
-        for (i = 0; i < size; i++)
+        do
         {
+            valid = true; //assume coordinates are valid until proven otherwise
+            
+            X = (rand() % (xRange-2)) + 1; //make the range each blank space then add 1 to align coordinates
+            Y = (rand() % (yRange-2)) + 1; //make the range each blank space then add 1 to align coordinates
             objPos *tempPos = new objPos(X, Y, 0);
-            if(blockOff->getElement(i).isPosEqual(tempPos)){
-                valid = false;
-                break;
+
+            for (i = 0; i < size; i++) // check with player location
+            {
+                if(blockOff->getElement(i).isPosEqual(tempPos)){
+                    valid = false;
+                    break;
+                }
+            }
+            for (j = 0; j < foodPosList->getSize(); j++) // check with current food location
+            {
+                if(foodPosList->getElement(j).isPosEqual(tempPos)){
+                    valid = false;
+                    break;
+                }
             }
             delete tempPos;
-        }
-        for (j = 0; j < foodPosList->getSize(); j++)
+
+        } while (!valid);
+            
+        if (k < specialFood)
         {
-            objPos *tempPos = new objPos(X, Y, 0);
-            if(foodPosList->getElement(j).isPosEqual(tempPos)){
-                valid = false;
-                break;
-            }
+            objPos *tempPos = new objPos(X,Y,'S');
+            foodPosList->insertHead(*tempPos);
             delete tempPos;
         }
-
-    } while (!valid);
-        
-    if (k < specialFood)
-    {
-        objPos *tempPos = new objPos(X,Y,'S');
-        foodPosList->insertTail(*tempPos);
-        delete tempPos;
-    }
-    else
-    {
-        objPos *tempPos = new objPos(X,Y,'o');
-        foodPosList->insertTail(*tempPos);
-        delete tempPos;
-    }
+        else
+        {
+            objPos *tempPos = new objPos(X,Y,'o');
+            foodPosList->insertHead(*tempPos);
+            delete tempPos;
+        }
     }
 }
 

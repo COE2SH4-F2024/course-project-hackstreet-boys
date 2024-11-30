@@ -63,26 +63,7 @@ void RunLogic(void)
         myGM->setExitTrue();
     }
 
-    else if (myGM->getInput() == 'p') //FOR DEBUGGING: test to see if score can be properly incremented 
-    {
-        
-        myPlayer->incrementPlayerLength();
-    }
-
-    else if (myGM->getInput() == 'l') //FOR DEBUGGING: test to see if lose state works
-    {
-        myGM->setLoseFlag();
-    }
-
-    else if (myGM->getInput() == 'f') //FOR DEBUGGING: test food generation
-    {
-        myFood->generateFood(playerPos);
-    }
-
-    else
-    {
         myPlayer-> updatePlayerDir();
-    }
 
     if(myPlayer->checkFoodConsumption())
     {
@@ -113,48 +94,43 @@ void DrawScreen(void)
             {
                 playerFound = false;
                 foodFound = false;
+                objPos *tempPos = new objPos(col, row, 0);
                 for(int i = 0 ; i < playerPos->getSize() ; i++)
                 {
-                    objPos *tempPos = new objPos(col, row, 0);
                     if(playerPos->getElement(i).isPosEqual(tempPos)){
+                        MacUILib_printf("%c", playerPos->getElement(i).getSymbolIfPosEqual(tempPos)); //print player elemets
                         playerFound = true;
+                        break;
                     }
-                    delete tempPos;
                 }
-                for(int i = 0 ; i < foodPos->getSize() ; i++)
-                {
-                    objPos *tempPos = new objPos(col, row, 0);
-                    if(foodPos->getElement(i).isPosEqual(tempPos)){
-                        foodFound = true;
+                if(!playerFound){
+                    for(int i = 0 ; i < foodPos->getSize() ; i++)
+                    {
+                        if(foodPos->getElement(i).isPosEqual(tempPos)){
+                            MacUILib_printf("%c", foodPos->getElement(i).getSymbolIfPosEqual(tempPos)); //print food elements
+                            foodFound = true;
+                        }
                     }
-                    delete tempPos;
+                    if(!foodFound){
+                        if (row == 0 || row == boardY-1 || col == 0 || col ==  boardX-1)   // print border elemets
+                        {
+                            MacUILib_printf("%c", '#');  // print a border character
+                        }                        
+                        else 
+                        {
+                            MacUILib_printf("%c", ' ');  // print a space character
+                        }
+                    }
                 }
-                if (row == 0 || row == boardY-1 || col == 0 || col ==  boardX-1)   {
-                    MacUILib_printf("%c", '#');  // print a border character
-                }
-                else if(playerFound) {
-                    MacUILib_printf("%c", playerPos->getHeadElement().getSymbol());
-                }
-                else if(foodFound) {
-                    MacUILib_printf("%c", foodPos->getElement(elementCount).getSymbol());
-                    elementCount++;
-                }
-                
-                else {
-                    MacUILib_printf("%c", ' ');  // print a space character
-                }
+                delete tempPos;
             }
             MacUILib_printf("\n");
         }
 
     //UI messages
     MacUILib_printf("Your current score is: %d.\n", myGM->getScore());
-    //Debugging Messages
-    MacUILib_printf("Player Position: (%d, %d), %c\n", playerPos->getHeadElement().pos->x, playerPos->getHeadElement().pos->y, playerPos->getHeadElement().getSymbol());
-    MacUILib_printf("DEBUGGING: Increment Score with 'p'.\n");
-    MacUILib_printf("DEBUGGING: Trigger lose state with 'l'.\n");
-    MacUILib_printf("DEBUGGING: Generate new food with 'f'.\n");
-    
+    MacUILib_printf("The current snake length is: %d.\n", playerPos->getSize());
+    MacUILib_printf("\nSpecial food denoted by, S, can increase/decrease both length and score.\n");
     }
 
     else if (myGM->getLoseFlagStatus() == true)

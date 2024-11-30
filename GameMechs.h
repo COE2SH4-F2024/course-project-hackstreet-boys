@@ -40,6 +40,7 @@ class GameMechs
         
         int getScore() const;
         void incrementScore();
+        void decrementScore();
         
         // More methods should be added here
         void collectAsyncInput();
