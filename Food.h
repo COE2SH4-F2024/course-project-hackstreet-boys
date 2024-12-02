@@ -10,7 +10,7 @@ class Food
 {
     private:
         //objPos foodPos;
-        objPosArrayList* foodPosList;
+        objPosArrayList* foodBucket;
         GameMechs* myGM;
         
 

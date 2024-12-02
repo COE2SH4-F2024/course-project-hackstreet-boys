@@ -63,12 +63,11 @@ void RunLogic(void)
         myGM->setExitTrue();
     }
 
-        myPlayer-> updatePlayerDir();
+    myPlayer-> updatePlayerDir(); //process direction key input
 
     if(myPlayer->checkFoodConsumption())
     {
         myFood->generateFood(playerPos);
-        //myPlayer->incrementPlayerLength();
     }
 
     myPlayer-> movePlayer();
@@ -95,7 +94,7 @@ void DrawScreen(void)
                 playerFound = false;
                 foodFound = false;
                 objPos *tempPos = new objPos(col, row, 0);
-                for(int i = 0 ; i < playerPos->getSize() ; i++)
+                for(int i = 0 ; i < playerPos->getSize() ; i++) //first, check for player elemnts
                 {
                     if(playerPos->getElement(i).isPosEqual(tempPos)){
                         MacUILib_printf("%c", playerPos->getElement(i).getSymbolIfPosEqual(tempPos)); //print player elemets
@@ -104,7 +103,7 @@ void DrawScreen(void)
                     }
                 }
                 if(!playerFound){
-                    for(int i = 0 ; i < foodPos->getSize() ; i++)
+                    for(int i = 0 ; i < foodPos->getSize() ; i++) //second, check for food elements
                     {
                         if(foodPos->getElement(i).isPosEqual(tempPos)){
                             MacUILib_printf("%c", foodPos->getElement(i).getSymbolIfPosEqual(tempPos)); //print food elements
@@ -130,16 +129,17 @@ void DrawScreen(void)
     //UI messages
     MacUILib_printf("Your current score is: %d.\n", myGM->getScore());
     MacUILib_printf("The current snake length is: %d.\n", playerPos->getSize());
+    MacUILib_printf("\nPress space to exit game.");
     MacUILib_printf("\nSpecial food denoted by, S, can increase/decrease both length and score.\n");
     }
 
-    else if (myGM->getLoseFlagStatus() == true)
+    else if (myGM->getLoseFlagStatus() == true) //game was lost
     {
         MacUILib_clearScreen();
         MacUILib_printf("You lose! Your total score before losing was %d.\n", myGM->getScore());
     }
     
-    else
+    else //game was ended by player
     {
         MacUILib_clearScreen();
         MacUILib_printf("The game ended! Your total score is %d.\n", myGM->getScore());
@@ -156,7 +156,7 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
-    delete myPlayer;
+    delete myPlayer; // delete any objects created on the heap
     delete myGM;
     delete myFood;
 

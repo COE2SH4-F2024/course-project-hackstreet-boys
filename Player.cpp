@@ -5,7 +5,7 @@
 Player::Player(GameMechs* thisGMRef, Food* thisFood)
 {
     mainGameMechsRef = thisGMRef;
-    myDir = STOP;
+    myDir = STOP; //player should spawn in  not moving
     playerPosList = new objPosArrayList();
     // more actions to be included
     myFood = thisFood;
@@ -26,6 +26,7 @@ Player::~Player()
 
 Player::Player(const Player& other) //copy constructor
 {
+    playerPosList = new objPosArrayList();
     mainGameMechsRef = other.mainGameMechsRef;
     myDir = other.myDir;
     playerPosList = other.playerPosList;
@@ -34,6 +35,8 @@ Player::Player(const Player& other) //copy constructor
 Player &Player::operator=(const Player& other) //assignment constructor
 {
     if (this != nullptr) {
+        delete playerPosList;
+        playerPosList = new objPosArrayList();
         mainGameMechsRef = other.mainGameMechsRef;
         myDir = other.myDir;
         playerPosList = other.playerPosList;
@@ -114,7 +117,7 @@ void Player::movePlayer()
         default:
         break;
     }
-    //check if player is going out of bounds
+    //check if player is going out of bounds and do warparound
     if (headPos.pos->x < 1) {
         headPos.pos->x = mainGameMechsRef->getBoardSizeX() - 2;
         playerPosList->removeHead();
@@ -138,7 +141,7 @@ void Player::movePlayer()
 
     if (checkSelfCollision())
     {
-        mainGameMechsRef->setLoseFlag(); //cause losing
+        mainGameMechsRef->setLoseFlag(); //self collision causes losing
     }
 
     
@@ -153,51 +156,50 @@ bool Player::checkFoodConsumption()
 
     for(int i = 0 ; i < foodPos->getSize() ; i++)
     {
-        if(foodPos->getElement(i).isPosEqual(&tempPos)){
-            char sym = foodPos->getElement(i).getSymbol();
-            if (sym == 'o'){ // check if the food consumed is normal food
-                mainGameMechsRef->incrementScore();
-                incrementPlayerLength();
-                return true;
+        char sym = foodPos->getElement(i).getSymbolIfPosEqual(&tempPos);
+        if (sym == 'o'){ // check if the food consumed is normal food
+            mainGameMechsRef->incrementScore();
+            incrementPlayerLength();
+            return true;
+        }
+        else if (sym == 'S'){ // check if the food consumed is special food
+
+            int scoreIncrease = (rand() % 11)-5; // generate a random score increase between -5 and 5
+            int playerIncrease = (rand() % 7)-3; // generate a random player length increase between -3 and 3
+
+            if(playerIncrease > 0) 
+            {
+                for(int j = 0; j < playerIncrease; j++) { //increase player length by randomly generated amount
+                    incrementPlayerLength();
+                }
             }
-            else if (sym == 'S'){ // check if the food consumed is special food
-
-                int scoreIncrease = (rand() % 11)-5;
-                int playerIncrease = (rand() % 7)-3;
-
-                if(playerIncrease > 0) 
-                {
-                    for(int j = 0; j < playerIncrease; j++) {
-                        incrementPlayerLength();
+            else if(playerIncrease < 0)
+            {
+                for(int j = 0; j < -playerIncrease; j++) { //decrease player length by randomly generated amount
+                    if(playerPosList->getSize() > 1) //make sure snake is not completely removed
+                    {
+                        playerPosList->removeTail();
                     }
                 }
-                else if(playerIncrease < 0)
-                {
-                    for(int j = 0; j < -playerIncrease; j++) {
-                        if(playerPosList->getSize() > 1) //make sure snake is not completely removed
-                        {
-                            playerPosList->removeTail();
-                        }
-                    }
-                }
-
-                if(scoreIncrease > 0) {
-                    for(int k = 0; k < scoreIncrease; k++){
-                        
-                        mainGameMechsRef->incrementScore();
-                    }
-                }
-                else if(scoreIncrease < 0)
-                {
-                    for(int k = 0; k < -scoreIncrease; k++){
-                        if(mainGameMechsRef->getScore() > 0) //make aure we dont go below 0
-                        {
-                            mainGameMechsRef->decrementScore();
-                        }
-                    }
-                }
-                return true;
             }
+
+            if(scoreIncrease > 0) 
+            {
+                for(int k = 0; k < scoreIncrease; k++){ //increase score by randomly generated amount
+                    
+                    mainGameMechsRef->incrementScore();
+                }
+            }
+            else if(scoreIncrease < 0)
+            {
+                for(int k = 0; k < -scoreIncrease; k++){ //decrease score by randomly generated amount
+                    if(mainGameMechsRef->getScore() > 0) //make aure we dont go below 0
+                    {
+                        mainGameMechsRef->decrementScore();
+                    }
+                }
+            }
+            return true;
         }
     }
     return false;
@@ -205,7 +207,7 @@ bool Player::checkFoodConsumption()
 
 void Player::incrementPlayerLength()
 {
-    playerPosList->insertTail(playerPosList->getTailElement());
+    playerPosList->insertTail(playerPosList->getTailElement()); // add a new player element at the tail
 }
 
 bool Player::checkSelfCollision()
@@ -216,7 +218,7 @@ bool Player::checkSelfCollision()
         objPos tempPos = playerPosList->getElement(i);
         if (playerPosList->getHeadElement().isPosEqual(&tempPos))
         {
-                return true;
+            return true;
         }
     }
 

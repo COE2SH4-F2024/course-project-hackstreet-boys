@@ -25,6 +25,8 @@ class GameMechs
         GameMechs();
         GameMechs(int boardX, int boardY);
         ~GameMechs(); // is this one needed at all? Why or why not?
+        GameMechs(const GameMechs& other); //copy constructor
+        GameMechs& operator=(const GameMechs& other); //assignment constructor
         
         bool getExitFlagStatus() const; 
         void setExitTrue();

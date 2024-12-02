@@ -9,8 +9,8 @@ GameMechs::GameMechs()
     loseFlag = false;
     score = 0;
 
-    boardSizeX = 20;
-    boardSizeY = 10;
+    boardSizeX = 30; //default board size
+    boardSizeY = 15;
 
     
 }
@@ -33,6 +33,30 @@ GameMechs::~GameMechs()
 {
     //no destruction needed
 }
+GameMechs::GameMechs(const GameMechs &other) // copy constructor
+{
+    input = other.input;
+    exitFlag = other.exitFlag;
+    loseFlag = other.loseFlag;
+    score = other.score;
+    boardSizeX = other.boardSizeX;
+    boardSizeY = other.boardSizeY;
+}
+
+GameMechs &GameMechs::operator=(const GameMechs &other) // assignment operator
+{
+    if(this != nullptr)
+    {
+        input = other.input;
+        exitFlag = other.exitFlag;
+        loseFlag = other.loseFlag;
+        score = other.score;
+        boardSizeX = other.boardSizeX;
+        boardSizeY = other.boardSizeY;
+    }
+    return *this;
+}
+
 
 bool GameMechs::getExitFlagStatus() const
 {

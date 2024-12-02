@@ -1,19 +1,20 @@
 #include "Food.h"
+#define foodNum 5 //how much food to generate each time
 
 Food::Food(GameMechs* GM) 
 {
-    foodPosList = new objPosArrayList();
+    foodBucket = new objPosArrayList(); //holds the position and symbol of each food generated
     myGM = GM;
 }
 
 Food::~Food()
 {
-    delete foodPosList;
+    delete foodBucket;
 }
 
 Food::Food(const Food& other)
 {
-    foodPosList = new objPosArrayList(*other.foodPosList);
+    foodBucket = new objPosArrayList(*other.foodBucket);
     myGM = other.myGM;
 }
 
@@ -21,8 +22,8 @@ Food &Food::operator=(const Food &other)
 {
     if (this != nullptr) 
     {
-        delete foodPosList;
-        foodPosList = new objPosArrayList(*other.foodPosList);
+        delete foodBucket;
+        foodBucket = new objPosArrayList(*other.foodBucket);
         myGM = other.myGM;
     }
     return *this;
@@ -30,7 +31,7 @@ Food &Food::operator=(const Food &other)
 
 void Food::generateFood(objPosArrayList* blockOff)
 {
-    srand(time(NULL));
+    srand(time(NULL)); //set see using current time
     
     int i = 0, j = 0;
     int X,Y, xRange, yRange, specialFood;
@@ -38,17 +39,19 @@ void Food::generateFood(objPosArrayList* blockOff)
     yRange = myGM->getBoardSizeY();
     bool valid = true;
     int size = blockOff->getSize();
-
-    specialFood = (rand() % 3);
+ 
+    specialFood = (rand() % (foodNum/2 + 1)); //decide how many special foods to generate this time
 
     //generate random coordinates
     //iterate through each player semgment
     //check to see if generated coordinates intersect
-    while(foodPosList->getSize()>0){
-        foodPosList->removeTail();
+    while(foodBucket->getSize() > 0)
+    {
+        foodBucket->removeTail();
     }
     
-    for (int k = 0 ; k < 5; k++) {
+    for (int k = 0; k < foodNum; k++) 
+    {
 
         do
         {
@@ -65,9 +68,9 @@ void Food::generateFood(objPosArrayList* blockOff)
                     break;
                 }
             }
-            for (j = 0; j < foodPosList->getSize(); j++) // check with current food location
+            for (j = 0; j < foodBucket->getSize(); j++) // check with current food location
             {
-                if(foodPosList->getElement(j).isPosEqual(tempPos)){
+                if(foodBucket->getElement(j).isPosEqual(tempPos)){
                     valid = false;
                     break;
                 }
@@ -78,14 +81,14 @@ void Food::generateFood(objPosArrayList* blockOff)
             
         if (k < specialFood)
         {
-            objPos *tempPos = new objPos(X,Y,'S');
-            foodPosList->insertHead(*tempPos);
+            objPos *tempPos = new objPos(X,Y,'S'); //create special food object
+            foodBucket->insertHead(*tempPos);
             delete tempPos;
         }
         else
         {
-            objPos *tempPos = new objPos(X,Y,'o');
-            foodPosList->insertHead(*tempPos);
+            objPos *tempPos = new objPos(X,Y,'o'); //create normal food object
+            foodBucket->insertHead(*tempPos);
             delete tempPos;
         }
     }
@@ -94,5 +97,5 @@ void Food::generateFood(objPosArrayList* blockOff)
 
 objPosArrayList* Food::getFoodPos() const
 {
-    return foodPosList;
+    return foodBucket;
 }
