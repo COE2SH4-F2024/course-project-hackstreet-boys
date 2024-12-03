@@ -1,5 +1,5 @@
 #include "Food.h"
-#define foodNum 5 //how much food to generate each time
+
 
 Food::Food(GameMechs* GM) 
 {
@@ -40,14 +40,14 @@ void Food::generateFood(objPosArrayList* blockOff)
     bool valid = true;
     int size = blockOff->getSize();
  
-    specialFood = (rand() % (foodNum/2 + 1)); //decide how many special foods to generate this time
+    specialFood = (rand() % (foodNum/2)) + 1; //decide how many special foods to generate this time
 
     //generate random coordinates
     //iterate through each player semgment
     //check to see if generated coordinates intersect
     while(foodBucket->getSize() > 0)
     {
-        foodBucket->removeTail();
+        foodBucket->removeTail(); //remove all previous food
     }
     
     for (int k = 0; k < foodNum; k++) 
@@ -61,7 +61,7 @@ void Food::generateFood(objPosArrayList* blockOff)
             Y = (rand() % (yRange-2)) + 1; //make the range each blank space then add 1 to align coordinates
             objPos *tempPos = new objPos(X, Y, 0);
 
-            for (i = 0; i < size; i++) // check with player location
+            for (i = 0; i < size; i++) // check with current player location
             {
                 if(blockOff->getElement(i).isPosEqual(tempPos)){
                     valid = false;

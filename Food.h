@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define foodNum 5 //how much food to generate each time
+
 class Food
 {
     private:

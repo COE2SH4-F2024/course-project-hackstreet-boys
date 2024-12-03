@@ -131,6 +131,7 @@ void DrawScreen(void)
     MacUILib_printf("The current snake length is: %d.\n", playerPos->getSize());
     MacUILib_printf("\nPress space to exit game.");
     MacUILib_printf("\nSpecial food denoted by, S, can increase/decrease both length and score.\n");
+    MacUILib_printf("Normal food is denoted by, o.\n");
     }
 
     else if (myGM->getLoseFlagStatus() == true) //game was lost

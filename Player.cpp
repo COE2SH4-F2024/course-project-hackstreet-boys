@@ -10,7 +10,7 @@ Player::Player(GameMechs* thisGMRef, Food* thisFood)
     // more actions to be included
     myFood = thisFood;
 
-    objPos *headPos = new objPos(mainGameMechsRef->getBoardSizeX()/2, mainGameMechsRef->getBoardSizeY()/2, '@');
+    objPos *headPos = new objPos(mainGameMechsRef->getBoardSizeX()/2, mainGameMechsRef->getBoardSizeY()/2, '*');
 
     playerPosList->insertHead(*headPos);
 
@@ -121,7 +121,7 @@ void Player::movePlayer()
     if (headPos.pos->x < 1) {
         headPos.pos->x = mainGameMechsRef->getBoardSizeX() - 2;
         playerPosList->removeHead();
-        playerPosList->insertHead(headPos);
+        playerPosList->insertHead(headPos); //if the player is going out of bounds, move them to the other side of the board
     }
     else if (headPos.pos->x > mainGameMechsRef->getBoardSizeX() - 2) {
         headPos.pos->x = 1;
@@ -164,8 +164,8 @@ bool Player::checkFoodConsumption()
         }
         else if (sym == 'S'){ // check if the food consumed is special food
 
-            int scoreIncrease = (rand() % 11)-5; // generate a random score increase between -5 and 5
-            int playerIncrease = (rand() % 7)-3; // generate a random player length increase between -3 and 3
+            int scoreIncrease = (rand() % 13)-2; // generate a random score increase between -2 and 10
+            int playerIncrease = (rand() % 8)-2; // generate a random player length increase between -2 and 5
 
             if(playerIncrease > 0) 
             {
@@ -193,7 +193,7 @@ bool Player::checkFoodConsumption()
             else if(scoreIncrease < 0)
             {
                 for(int k = 0; k < -scoreIncrease; k++){ //decrease score by randomly generated amount
-                    if(mainGameMechsRef->getScore() > 0) //make aure we dont go below 0
+                    if(mainGameMechsRef->getScore() > 0) //make sure we dont go below 0
                     {
                         mainGameMechsRef->decrementScore();
                     }

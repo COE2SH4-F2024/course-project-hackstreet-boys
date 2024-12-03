@@ -26,7 +26,7 @@ void objPosArrayList::insertHead(objPos thisPos)
 {
     if (listSize < arrayCapacity)
     {
-        for (int i = listSize; i > 0; i--)
+        for (int i = listSize; i > 0; i--) // shift all elements down one position
         {
             aList[i] = aList[i - 1];
         }
@@ -37,7 +37,7 @@ void objPosArrayList::insertHead(objPos thisPos)
 
 void objPosArrayList::insertTail(objPos thisPos)
 {
-    if (listSize < arrayCapacity)
+    if (listSize < arrayCapacity) // check if array is not full
     {
         aList[listSize] = thisPos;
         listSize++;    
@@ -46,9 +46,9 @@ void objPosArrayList::insertTail(objPos thisPos)
 
 void objPosArrayList::removeHead()
 {
-    if (listSize > 0)
+    if (listSize > 0) // check if list is not empty
     {
-        for (int i = 0; i < listSize - 1; i++)
+        for (int i = 0; i < listSize - 1; i++) // shift all elements up one position
         {
             aList[i] = aList[i + 1];
         }
@@ -59,7 +59,7 @@ void objPosArrayList::removeHead()
 
 void objPosArrayList::removeTail()
 {
-    if (listSize > 0)
+    if (listSize > 0) //Check if list is not empty
     {
         listSize--;
     }
@@ -73,7 +73,7 @@ objPos objPosArrayList::getHeadElement() const
 
 objPos objPosArrayList::getTailElement() const
 {
-    if (listSize < 1)
+    if (listSize < 1) //check if list is empty
     {
         return objPos();
     }
@@ -82,7 +82,7 @@ objPos objPosArrayList::getTailElement() const
 
 objPos objPosArrayList::getElement(int index) const
 {
-    if (index < 0 || index >= listSize)
+    if (index < 0 || index >= listSize) //Check if index is within bounds
     {
         return objPos();
     }

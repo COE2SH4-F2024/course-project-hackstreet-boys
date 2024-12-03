@@ -86,7 +86,7 @@ void GameMechs::incrementScore()
     score++;
 }
 
-void GameMechs::decrementScore()
+void GameMechs::decrementScore() // new function to decrease score using special food
 {
     score--;
 }
